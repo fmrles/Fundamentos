@@ -184,7 +184,7 @@ public class AFND {
                               break;
                         case '+':
                               temp = pila.pop();
-                              par = constructor.construirKleene(temp);
+                              par = constructor.construirMas(temp);
                               pila.push(par);
                               break;
                         case '.':
