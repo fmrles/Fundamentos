@@ -1,9 +1,10 @@
-package Tarea1.AFND;
+package tarea_1.afnd;
 
 import java.util.HashSet;
 import java.util.Set;
 import java.util.Stack;
-import Tarea1.nodos_y_estados.Par;
+
+import tarea_1.nodos_y_estados.Par;
 
 public class AFND {
       // private int restate = 0;
@@ -41,7 +42,7 @@ public class AFND {
 
       }
 
-      public String agregar_simbolo_union() {
+      public String agregarSimboloUnion() {
             int longitud = er.length(); // longitud de la expresion regular
             if (longitud == 1) { // si la longitud es 1, no se puede agregar simbolo union
                   System.out.println("e.r con simbolo union:" + er);
@@ -49,22 +50,22 @@ public class AFND {
                   return er;
             } // Si la longitud de er es mayor que 1, crea un nuevo array de caracteres
               // cadena_retorno con una longitud de 2 * length + 2.
-            int longitud_cadena_retorno = 0;
-            char cadena_retorno[] = new char[2 * longitud + 2];
+            int longitudCadenaRetorno = 0;
+            char cadenaRetorno[] = new char[2 * longitud + 2];
             char primero, segundo = '0';
             for (int i = 0; i < longitud - 1; i++) { // Recorre la expresion regular y agrega el simbolo union en los
                                                      // lugares correctos.
                   primero = er.charAt(i);
                   segundo = er.charAt(i + 1);
-                  cadena_retorno[longitud_cadena_retorno++] = primero;
-                  if (primero != '(' && primero != '|' && es_letra(segundo)) {
-                        cadena_retorno[longitud_cadena_retorno++] = '.';
+                  cadenaRetorno[longitudCadenaRetorno++] = primero;
+                  if (primero != '(' && primero != '|' && esLetra(segundo)) {
+                        cadenaRetorno[longitudCadenaRetorno++] = '.';
                   } else if (segundo == '(' && primero != '|' && primero != '(') {
-                        cadena_retorno[longitud_cadena_retorno++] = '.';
+                        cadenaRetorno[longitudCadenaRetorno++] = '.';
                   }
             }
-            cadena_retorno[longitud_cadena_retorno++] = segundo; // Agrega el ultimo caracter de la expresion regular.
-            String erString = new String(cadena_retorno, 0, longitud_cadena_retorno); // Convierte el array de
+            cadenaRetorno[longitudCadenaRetorno++] = segundo; // Agrega el ultimo caracter de la expresion regular.
+            String erString = new String(cadenaRetorno, 0, longitudCadenaRetorno); // Convierte el array de
                                                                                       // caracteres cadena_retorno en un
                                                                                       // string.
             System.out.println("Expresion regular con simbolo union: " + erString);
@@ -73,8 +74,8 @@ public class AFND {
             return erString;
       }
 
-      private boolean es_letra(char check) { // Verifica si el caracter check es una letra.
-            if (check >= 'a' && check <= 'z' || check >= 'A' && check <= 'Z') {
+      private boolean esLetra(char check) { // Verifica si el caracter check es una letra.
+            if (check >= 'a' && check <= 'z' || check >= 'A' && check <= 'Z' || check >= '0' && check <= '9') {
                   return true;
             }
             return false;
@@ -162,7 +163,7 @@ public class AFND {
             return -1;
       }
 
-      public void er_a_afnd() {
+      public void erToAfnd() {
             par = new Par();
             Par temp = new Par();
             Par der, izq;

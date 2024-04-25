@@ -1,6 +1,8 @@
+package tarea_1.fundamentos_tarea_1;
+
 import java.util.Scanner;
 
-import Tarea1.AFND.AFND;
+import tarea_1.afnd.AFND;
 
 public class Main {
 
@@ -12,9 +14,9 @@ public class Main {
             String er = r.nextLine();
             System.out.println("er:" + er);
             AFND afnd = new AFND(er);
-            afnd.agregar_simbolo_union();
+            afnd.agregarSimboloUnion();
             afnd.postfijo();
-            afnd.er_a_afnd();
+            // afnd.erToAfnd();
 
             System.out.print("Escribe nombre Carpeta: ");
 
