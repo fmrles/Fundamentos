@@ -42,12 +42,12 @@ public class GestorAFND {
 		return AFND;
 	}
 
-	public void descartarAFND(Transicion AFND_Descartado) { // descarta un estado del automata. Disminuye el contador
+	public void descartarAFND(Transicion afndDescartado) { // descarta un estado del automata. Disminuye el contador
 											// estadosAFND, limpia el estado del automata y lo
 											// empuja a la pila.
 		--estadosAFND;
-		AFND_Descartado.limpiarEstado();
-		pilaAFND.push(AFND_Descartado);
+		afndDescartado.limpiarEstado();
+		pilaAFND.push(afndDescartado);
 	}
 
 }

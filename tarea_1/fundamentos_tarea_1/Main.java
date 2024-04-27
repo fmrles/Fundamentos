@@ -16,14 +16,15 @@ public class Main {
             AFND afnd = new AFND(er);
             afnd.agregarSimboloUnion();
             afnd.postfijo();
-            // afnd.erToAfnd();
+            afnd.erToAfnd();
+            afnd.print();
 
+            r.close();
             System.out.print("Escribe nombre Carpeta: ");
-
             String dirPath = r.nextLine();
             Directorio dir = new Directorio(dirPath);
             dir.crearDirectorio();
             dir.printArchivosEnDir();
-            r.close();
+
       }
 }

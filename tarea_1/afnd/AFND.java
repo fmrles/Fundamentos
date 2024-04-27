@@ -4,10 +4,13 @@ import java.util.HashSet;
 import java.util.Set;
 import java.util.Stack;
 
+//import print.ConsoleTable;
 import tarea_1.nodos_y_estados.Par;
+import tarea_1.nodos_y_estados.Transicion;
 
 public class AFND {
-      // private int restate = 0;
+
+      private int restate = 0;
 
       private String er;
       private String erUnion;
@@ -16,7 +19,7 @@ public class AFND {
       private String[] letra;
       private Par par;
 
-      // Poner Clase Imprimir
+      // private ConsoleTable table;
 
       public AFND(String er) { // Constructor de la clase AFND
             this.er = er;
@@ -25,11 +28,12 @@ public class AFND {
             Set<Character> temp = new HashSet<>(); // Crea un conjunto temp para almacenar los caracteres únicos en er
                                                    // que son letras.
             for (int i = 0; i < this.er.length(); i++) { //
-                  if (es_letra(this.er.charAt(i))) {
+                  if (esValido(this.er.charAt(i))) {
                         temp.add(this.er.charAt(i));
                   }
             }
-            letra = new String[temp.size() + 2]; // Crea un array de String letra con una longitud de temp.size() + 2.
+            letra = new String[temp.size() + 2]; // Crea un array de String letra con una
+            // longitud de temp.size() + 2.
 
             Object[] tempObj = temp.toArray(); // Convierte el conjunto temp en un array de objetos tempObj.
             int i = 0;
@@ -37,8 +41,9 @@ public class AFND {
             for (; i < tempObj.length; i++) { //
                   letra[i + 1] = (char) tempObj[i] + "";
             }
-            letra[i + 1] = "EPSILON"; // Llena el array letra con los caracteres únicos en er y añade una cadena vacía
-                                      // al principio y “EPSILON” al final.
+            letra[i + 1] = "EPSILON"; // Llena el array letra con los caracteres únicos
+            // en er y añade una cadena vacía
+            // al principio y “EPSILON” al final.
 
       }
 
@@ -58,7 +63,7 @@ public class AFND {
                   primero = er.charAt(i);
                   segundo = er.charAt(i + 1);
                   cadenaRetorno[longitudCadenaRetorno++] = primero;
-                  if (primero != '(' && primero != '|' && esLetra(segundo)) {
+                  if (primero != '(' && primero != '|' && esValido(segundo)) {
                         cadenaRetorno[longitudCadenaRetorno++] = '.';
                   } else if (segundo == '(' && primero != '|' && primero != '(') {
                         cadenaRetorno[longitudCadenaRetorno++] = '.';
@@ -66,15 +71,15 @@ public class AFND {
             }
             cadenaRetorno[longitudCadenaRetorno++] = segundo; // Agrega el ultimo caracter de la expresion regular.
             String erString = new String(cadenaRetorno, 0, longitudCadenaRetorno); // Convierte el array de
-                                                                                      // caracteres cadena_retorno en un
-                                                                                      // string.
+                                                                                   // caracteres cadena_retorno en un
+                                                                                   // string.
             System.out.println("Expresion regular con simbolo union: " + erString);
             System.out.println();
             erUnion = erString;
             return erString;
       }
 
-      private boolean esLetra(char check) { // Verifica si el caracter check es una letra.
+      private boolean esValido(char check) { // Verifica si el caracter check es una letra.
             if (check >= 'a' && check <= 'z' || check >= 'A' && check <= 'Z' || check >= '0' && check <= '9') {
                   return true;
             }
@@ -91,7 +96,7 @@ public class AFND {
             int ubicacion = 0;
             ch = erUnion.charAt(ubicacion++); // Inicializa ch con el primer caracter de la expresion regular.
             while (!s.empty()) {
-                  if (es_letra(ch)) { // Si ch es una letra, agrega ch a la expresion regular postfija.
+                  if (esValido(ch)) { // Si ch es una letra, agrega ch a la expresion regular postfija.
                         erSalida = erSalida + ch;
                         ch = erUnion.charAt(ubicacion++);
                   } else { // Si ch no es una letra, compara la relevancia de ch con la relevancia del
@@ -200,6 +205,114 @@ public class AFND {
                               break;
                   }
             }
+      }
+
+      public void print() {
+            restate(this.par.nodoInicio);
+            revisit(this.par.nodoInicio);
+            System.out.println("--------AFND--------");
+            System.out.println();
+            System.out.print("Sigma={");
+            for (int i = 1; i < letra.length - 1; i++) {
+                  System.out.print(letra[i]);
+                  if (i < letra.length - 2) {
+                        System.out.print(",");
+                  }
+            }
+            System.out.print("}");
+
+            System.out.println("");
+            System.out.println("K y Delta:");
+
+            printAFND(this.par.nodoInicio);
+
+            revisit(this.par.nodoInicio);
+
+            System.out.println("s=q" + (this.par.nodoInicio).getEstado());
+            System.out.println("F=q" + (this.par.nodoFinal).getEstado());
+            System.out.println("--------AFND--------");
+      }
+
+      private void restate(Transicion startAFND) { //
+            if (startAFND == null || startAFND.esVisitado()) {
+                  return;
+            }
+            startAFND.setVisitado();
+            startAFND.setEstado(restate++);
+            restate(startAFND.siguiente);
+            restate(startAFND.siguiente2);
+      }
+
+      private void revisit(Transicion startAFND) {
+            if (startAFND == null || !startAFND.esVisitado()) {
+                  return;
+            }
+            startAFND.setNoVisitado();
+            revisit(startAFND.siguiente);
+            revisit(startAFND.siguiente2);
+      }
+
+      private void printAFND(Transicion startAFND) {
+
+            if (startAFND == null || startAFND.esVisitado()) {
+                  return;
+            } else {
+                  startAFND.setVisitado();
+
+                  printAfndDelta(startAFND);
+                  if (startAFND.siguiente != null) {
+                        System.out.println("");
+                  }
+                  printAFND(startAFND.siguiente);
+                  printAFND(startAFND.siguiente2);
+            }
+
+      }
+
+      private void printAfndDelta(Transicion nodo) {
+            if (nodo.siguiente != null) {
+                  System.out.print("q" + nodo.getEstado());
+                  if (nodo.getTransicion() == -1) {
+                        for (int i = 0; i < letra.length - 2; i++) {
+                              System.out.print("");
+                        }
+                        if (nodo.siguiente2 != null) {
+                              System.out.print(",_," + "(q" + nodo.siguiente.getEstado() + ";q"
+                                          + nodo.siguiente2.getEstado() + ")");
+                        } else {
+                              System.out.print(",_,q" + nodo.siguiente.getEstado());
+                        }
+                  } else {
+                        int index = getIndex("" + (char) nodo.getTransicion());
+                        for (int i = 0; i < letra.length - 1; i++) {
+                              if (i != index) {
+                                    System.out.print("");
+                              } else {
+                                    if (nodo.siguiente2 != null) {
+                                          System.out.print("," + "(" + (char) nodo.getTransicion() + ",q"
+                                                      + nodo.siguiente.getEstado() + ";q"
+                                                      + nodo.siguiente2.getEstado() + ")");
+                                    } else {
+                                          System.out.print("," + (char) nodo.getTransicion() + ",q"
+                                                      + nodo.siguiente.getEstado());
+                                    }
+                              }
+                        }
+                  }
+            } else {
+                  System.out.print(("q" + nodo.getEstado() + "  "));
+                  System.out.print("  ");
+                  System.out.print("  ");
+                  System.out.println("");
+            }
+      }
+
+      private int getIndex(String ch) {
+            for (int i = 0; i < letra.length; i++) {
+                  if (letra[i].equals(ch))
+                        return i - 1;
+            }
+            return -1;
       }
 
 }
