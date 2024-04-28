@@ -1,10 +1,10 @@
+
 package tarea_1.afnd;
 
 import java.util.HashSet;
 import java.util.Set;
 import java.util.Stack;
 
-//import print.ConsoleTable;
 import tarea_1.nodos_y_estados.Par;
 import tarea_1.nodos_y_estados.Transicion;
 
@@ -16,10 +16,8 @@ public class AFND {
       private String erUnion;
       private String erPostfijo;
 
-      private String[] letra;
+      private String[] alfabeto;
       private Par par;
-
-      // private ConsoleTable table;
 
       public AFND(String er) { // Constructor de la clase AFND
             this.er = er;
@@ -32,19 +30,26 @@ public class AFND {
                         temp.add(this.er.charAt(i));
                   }
             }
-            letra = new String[temp.size() + 2]; // Crea un array de String letra con una
+            alfabeto = new String[temp.size() + 2]; // Crea un array de String alfabeto con una
             // longitud de temp.size() + 2.
 
             Object[] tempObj = temp.toArray(); // Convierte el conjunto temp en un array de objetos tempObj.
             int i = 0;
-            letra[i] = "";
+            alfabeto[i] = "";
             for (; i < tempObj.length; i++) { //
-                  letra[i + 1] = (char) tempObj[i] + "";
+                  alfabeto[i + 1] = (char) tempObj[i] + "";
             }
-            letra[i + 1] = "EPSILON"; // Llena el array letra con los caracteres únicos
+            alfabeto[i + 1] = "EPSILON"; // Llena el array alfabeto con los caracteres únicos
             // en er y añade una cadena vacía
             // al principio y “EPSILON” al final.
+      }
 
+      public Par getPar() {
+            return par;
+      }
+
+      public String[] getAlfabeto() {
+            return alfabeto;
       }
 
       public String agregarSimboloUnion() {
@@ -79,7 +84,7 @@ public class AFND {
             return erString;
       }
 
-      private boolean esValido(char check) { // Verifica si el caracter check es una letra.
+      private boolean esValido(char check) { // Verifica si el caracter check es una alfabeto.
             if (check >= 'a' && check <= 'z' || check >= 'A' && check <= 'Z' || check >= '0' && check <= '9') {
                   return true;
             }
@@ -96,10 +101,10 @@ public class AFND {
             int ubicacion = 0;
             ch = erUnion.charAt(ubicacion++); // Inicializa ch con el primer caracter de la expresion regular.
             while (!s.empty()) {
-                  if (esValido(ch)) { // Si ch es una letra, agrega ch a la expresion regular postfija.
+                  if (esValido(ch)) { // Si ch es una alfabeto, agrega ch a la expresion regular postfija.
                         erSalida = erSalida + ch;
                         ch = erUnion.charAt(ubicacion++);
-                  } else { // Si ch no es una letra, compara la relevancia de ch con la relevancia del
+                  } else { // Si ch no es una alfabeto, compara la relevancia de ch con la relevancia del
                            // caracter en la cima de la pila.
                         ch1 = s.peek();
                         if (rp(ch1) < re(ch)) { // Si la relevancia de ch1 es menor que la relevancia de ch, agrega ch a
@@ -213,9 +218,9 @@ public class AFND {
             System.out.println("--------AFND--------");
             System.out.println();
             System.out.print("Sigma={");
-            for (int i = 1; i < letra.length - 1; i++) {
-                  System.out.print(letra[i]);
-                  if (i < letra.length - 2) {
+            for (int i = 1; i < alfabeto.length - 1; i++) {
+                  System.out.print(alfabeto[i]);
+                  if (i < alfabeto.length - 2) {
                         System.out.print(",");
                   }
             }
@@ -273,7 +278,7 @@ public class AFND {
             if (nodo.siguiente != null) {
                   System.out.print("q" + nodo.getEstado());
                   if (nodo.getTransicion() == -1) {
-                        for (int i = 0; i < letra.length - 2; i++) {
+                        for (int i = 0; i < alfabeto.length - 2; i++) {
                               System.out.print("");
                         }
                         if (nodo.siguiente2 != null) {
@@ -284,7 +289,7 @@ public class AFND {
                         }
                   } else {
                         int index = getIndex("" + (char) nodo.getTransicion());
-                        for (int i = 0; i < letra.length - 1; i++) {
+                        for (int i = 0; i < alfabeto.length - 1; i++) {
                               if (i != index) {
                                     System.out.print("");
                               } else {
@@ -308,11 +313,10 @@ public class AFND {
       }
 
       private int getIndex(String ch) {
-            for (int i = 0; i < letra.length; i++) {
-                  if (letra[i].equals(ch))
+            for (int i = 0; i < alfabeto.length; i++) {
+                  if (alfabeto[i].equals(ch))
                         return i - 1;
             }
             return -1;
       }
-
 }
