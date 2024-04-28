@@ -1,4 +1,4 @@
-package src.fundamentos_tarea_1;
+package src.main;
 
 import java.io.File;
 

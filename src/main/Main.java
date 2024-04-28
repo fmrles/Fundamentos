@@ -1,4 +1,4 @@
-package src.fundamentos_tarea_1;
+package src.main;
 
 import java.util.Scanner;
 
@@ -34,7 +34,7 @@ public class Main {
             System.out.println();
 
             System.out.println("Tu expresion regular:" + er);
-            System.out.println("Escribe un string para ser reconocido por la ER ó escribe S para salir");
+            System.out.println("Escribe un string para ser reconocido por la ER o escribe S para salir");
             while (r.hasNextLine()) {
                   String string = r.nextLine();
                   if (string.equals("S")) {
