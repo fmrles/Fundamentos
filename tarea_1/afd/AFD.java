@@ -28,6 +28,16 @@ public class AFD {
             this.par = par;
             this.alfabeto = alfabeto;
             map = new HashMap<>();
+            System.out.println("--------AFD--------");
+            System.out.print("Sigma={");
+            for (int i = 1; i < alfabeto.length - 1; i++) {
+                  System.out.print(alfabeto[i]);
+                  if (i < alfabeto.length - 2) {
+                        System.out.print(",");
+                  }
+            }
+            System.out.println("}");
+
       }
 
       public List<Character[]> getAfd() {
@@ -61,17 +71,9 @@ public class AFD {
       }
 
       public void printAFD() {
-            System.out.println();
-            System.out.println("--------AFD--------");
-            System.out.print("Sigma={");
-            for (int i = 1; i < alfabeto.length - 1; i++) {
-                  System.out.print(alfabeto[i]);
-                  if (i < alfabeto.length - 2) {
-                        System.out.print(",");
-                  }
-            }
-            System.out.println("}");
-
+            System.out.println("");
+            System.out.println("K, Estado Inicial y Estado Final= ");
+            System.out.println("↓");
             for (Entry<Set<Integer>, Integer> entry : map.entrySet()) {
                   if (entry.getValue() == -1) {
                         continue;
@@ -102,6 +104,11 @@ public class AFD {
       }
 
       public void createDFA() {
+            System.out.println("");
+            System.out.println("Delta=");
+            for (int i = 0; i < alfabeto.length - 1; i++) {
+                  System.out.print(" " + alfabeto[i]);
+            }
             tempSet = new HashSet<>();
             Set<Integer> start = move(par.nodoInicio, -1);
             map.put(start, estado);
@@ -109,6 +116,8 @@ public class AFD {
             while (!queue.isEmpty()) {
                   Character[] adfLine = new Character[alfabeto.length - 1];
                   int character = queue.poll();
+                  System.out.println();
+                  System.out.print((char) character + " ");
                   adfLine[0] = (char) character;
                   Set<Integer> set = getSet(character);
                   for (int i = 1; i < alfabeto.length - 1; i++) {
@@ -116,7 +125,7 @@ public class AFD {
                         Set<Integer> midset = new HashSet<>();
                         for (Integer integer : set) {
                               Transicion transicion = getTransicion(par.nodoInicio, integer);
-                              revisit();
+                              revisitar();
                               if (transicion == null) {
                                     continue;
                               } else if ((char) transicion.getTransicion() == alfabeto[i].charAt(0)) {
@@ -125,35 +134,40 @@ public class AFD {
                         }
                         for (Integer integer : midset) {
                               Transicion transicion = getTransicion(par.nodoInicio, integer);
-                              revisit();
+                              revisitar();
                               move(transicion, -1);
                         }
                         Integer c = getCharacter(tempSet);
                         if (c == null) {
                               if (tempSet.isEmpty()) {
                                     map.put(tempSet, -1);
+                                    System.out.print("_" + " ");
                                     adfLine[i] = null;
                               } else {
                                     queue.add(estado);
+                                    System.out.print((char) estado + " ");
                                     adfLine[i] = (char) estado;
                                     map.put(tempSet, estado++);
                               }
                         } else {
                               if (c == -1) {
+                                    System.out.print("_" + " ");
                                     adfLine[i] = null;
                               } else {
                                     adfLine[i] = (char) c.intValue();
+                                    System.out.print((char) c.intValue() + " ");
 
                               }
                         }
                   }
                   afd.add(adfLine);
             }
+            System.out.println("");
       }
 
       private Set<Integer> move(Transicion nodoInicio, int i) {
             connect(nodoInicio, i);
-            revisit();
+            revisitar();
             return tempSet;
       }
 
@@ -175,19 +189,19 @@ public class AFD {
             return map.get(set);
       }
 
-      private void revisit(Transicion transicion) {
+      private void revisitar(Transicion transicion) {
             if (transicion == null || !transicion.esVisitado()) {
                   return;
             }
             transicion.setNoVisitado();
-            revisit(transicion.siguiente);
-            revisit(transicion.siguiente2);
+            revisitar(transicion.siguiente);
+            revisitar(transicion.siguiente2);
       }
 
-      private void revisit() {
+      private void revisitar() {
             par.nodoInicio.setNoVisitado();
-            revisit(par.nodoInicio.siguiente);
-            revisit(par.nodoInicio.siguiente2);
+            revisitar(par.nodoInicio.siguiente);
+            revisitar(par.nodoInicio.siguiente2);
       }
 
       private Transicion getTransicion(Transicion transicion, Integer estadoInicio) {

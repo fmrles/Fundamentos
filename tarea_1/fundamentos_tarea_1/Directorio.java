@@ -31,4 +31,8 @@ public class Directorio {
             }
 
       }
+
+      public String getDir() {
+            return directorio.getAbsolutePath();
+      }
 }
