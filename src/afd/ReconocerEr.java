@@ -75,7 +75,7 @@ public class ReconocerEr {
             }
       }
 
-      private Character mover(Character oriEstado, char input) {
+      private Character mover(Character oriEstado, char input) { // Mover hacia un estado
             for (Character[] characters : afd) {
                   if (characters[0] != oriEstado)
                         continue;
@@ -87,7 +87,7 @@ public class ReconocerEr {
             return null;
       }
 
-      private int getIndex(char input) {
+      private int getIndex(char input) { // Obtener el index de un char en el alfabeto
             for (int i = 1; i < alfabeto.length - 1; i++) {
                   if (alfabeto[i].charAt(0) == input)
                         return i;
@@ -206,7 +206,7 @@ public class ReconocerEr {
             }
       }
 
-      private Character mover(Character oriEstado, int index) {
+      private Character mover(Character oriEstado, int index) { // Mover hacia un estado
             for (Character[] characters : rEr) {
                   if (characters[0] != oriEstado)
                         continue;
@@ -262,12 +262,12 @@ public class ReconocerEr {
             }
       }
 
-      private boolean necesitaReemplazar(Character ch) {
+      private boolean necesitaReemplazar(Character ch) { // Verificar si un estado necesita ser reemplazado
             Character v = map.get(ch);
             return v != null;
       }
 
-      private boolean ignorar(Character character) {
+      private boolean ignorar(Character character) { // Ignorar estados que no son necesarios
             for (Entry<Character, Character> m : map.entrySet()) {
                   if (m.getKey().equals(character))
                         return true;

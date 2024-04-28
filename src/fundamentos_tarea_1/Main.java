@@ -11,7 +11,7 @@ public class Main {
       public static void main(String[] args) {
 
             Scanner r = new Scanner(System.in);
-
+            // Entradas de Datos
             System.out.print("Escribe la expresión regular: ");
             String er = r.nextLine();
             System.out.print("Escribe nombre Carpeta: ");
@@ -20,15 +20,15 @@ public class Main {
             dir.crearDirectorio();
 
             System.out.println("er:" + er);
-
+            // Creación AFND
             AFND afnd = new AFND(er);
             afnd.print();
 
             System.out.println(" ");
-
+            // Creación AFD
             AFD afd = new AFD(afnd.getPar(), afnd.getAlfabeto());
             afd.printAFD();
-
+            // Reconocimiento de Stings
             ReconocerEr rEr = new ReconocerEr(dir.getDir(), afd.getAfd(), afd.getFinalEstado(), afd.getAlfabeto());
 
             System.out.println();

@@ -1,6 +1,6 @@
 package src.nodos_y_estados;
 
-public class ObjetoEstado {
+public class ObjetoEstado { // Clase que representa un estado del automata
 
       public static final int EPSILON = -1;
       public static final int VACIO = -2;

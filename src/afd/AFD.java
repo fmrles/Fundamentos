@@ -79,9 +79,10 @@ public class AFD {
                   if (entry.getValue() == -1) {
                         continue;
                   }
-                  System.out.println((char) entry.getValue().intValue() + " = " + entry.getKey()
-                              + (esInicio(entry.getKey()) ? " Inicio " : "")
-                              + (esFinal(entry.getKey()) ? " Final " : ""));
+                  System.out.println(
+                              (char) entry.getValue().intValue() + " = " + entry.getKey()
+                                          + (esInicio(entry.getKey()) ? " Inicio " : "")
+                                          + (esFinal(entry.getKey()) ? " Final " : ""));
             }
             System.out.println("--------AFD--------");
       }
@@ -104,7 +105,7 @@ public class AFD {
             return false;
       }
 
-      public void createDFA() {
+      public void createDFA() { // Este método crea el AFD
             System.out.println("");
             System.out.println("Delta=");
             for (int i = 0; i < alfabeto.length - 1; i++) {
@@ -166,13 +167,16 @@ public class AFD {
             System.out.println("");
       }
 
-      private Set<Integer> mover(ObjetoEstado nodoInicio, int i) {
+      private Set<Integer> mover(ObjetoEstado nodoInicio, int i) { // Este método toma un nodo y un carácter y devuelve
+                                                                   // un conjunto de nodos a los que se puede llegar
+                                                                   // desde el nodo dado con el carácter dado.
             connect(nodoInicio, i);
             revisitar();
             return tempSet;
       }
 
-      private void connect(ObjetoEstado ObjetoEstado, int i) {
+      private void connect(ObjetoEstado ObjetoEstado, int i) { // Este método toma un nodo y un carácter y conecta el
+                                                               // nodo dado con el carácter dado.
             if (ObjetoEstado == null || ObjetoEstado.esVisitado()) {
                   return;
             }
@@ -190,7 +194,7 @@ public class AFD {
             return map.get(set);
       }
 
-      private void revisitar(ObjetoEstado ObjetoEstado) {
+      private void revisitar(ObjetoEstado ObjetoEstado) { // Este método revisita los nodos.
             if (ObjetoEstado == null || !ObjetoEstado.esVisitado()) {
                   return;
             }
@@ -199,7 +203,7 @@ public class AFD {
             revisitar(ObjetoEstado.siguiente2);
       }
 
-      private void revisitar() {
+      private void revisitar() { // Este método revisita los nodos.
             par.nodoInicio.setNoVisitado();
             revisitar(par.nodoInicio.siguiente);
             revisitar(par.nodoInicio.siguiente2);
