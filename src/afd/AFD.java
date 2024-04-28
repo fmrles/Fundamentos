@@ -1,4 +1,4 @@
-package tarea_1.afd;
+package src.afd;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -7,11 +7,12 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+
+import src.nodos_y_estados.Par;
+import src.nodos_y_estados.ObjetoEstado;
+
 import java.util.Queue;
 import java.util.Set;
-
-import tarea_1.nodos_y_estados.Transicion;
-import tarea_1.nodos_y_estados.Par;
 
 public class AFD {
       private Par par;
@@ -37,7 +38,7 @@ public class AFD {
                   }
             }
             System.out.println("}");
-
+            createDFA();
       }
 
       public List<Character[]> getAfd() {
@@ -110,7 +111,7 @@ public class AFD {
                   System.out.print(" " + alfabeto[i]);
             }
             tempSet = new HashSet<>();
-            Set<Integer> start = move(par.nodoInicio, -1);
+            Set<Integer> start = mover(par.nodoInicio, -1);
             map.put(start, estado);
             queue.add(estado++);
             while (!queue.isEmpty()) {
@@ -124,18 +125,18 @@ public class AFD {
                         tempSet = new HashSet<>();
                         Set<Integer> midset = new HashSet<>();
                         for (Integer integer : set) {
-                              Transicion transicion = getTransicion(par.nodoInicio, integer);
+                              ObjetoEstado ObjetoEstado = getObjetoEstado(par.nodoInicio, integer);
                               revisitar();
-                              if (transicion == null) {
+                              if (ObjetoEstado == null) {
                                     continue;
-                              } else if ((char) transicion.getTransicion() == alfabeto[i].charAt(0)) {
-                                    midset.add(transicion.siguiente.getEstado());
+                              } else if ((char) ObjetoEstado.getObjetoEstado() == alfabeto[i].charAt(0)) {
+                                    midset.add(ObjetoEstado.siguiente.getEstado());
                               }
                         }
                         for (Integer integer : midset) {
-                              Transicion transicion = getTransicion(par.nodoInicio, integer);
+                              ObjetoEstado ObjetoEstado = getObjetoEstado(par.nodoInicio, integer);
                               revisitar();
-                              move(transicion, -1);
+                              mover(ObjetoEstado, -1);
                         }
                         Integer c = getCharacter(tempSet);
                         if (c == null) {
@@ -165,21 +166,21 @@ public class AFD {
             System.out.println("");
       }
 
-      private Set<Integer> move(Transicion nodoInicio, int i) {
+      private Set<Integer> mover(ObjetoEstado nodoInicio, int i) {
             connect(nodoInicio, i);
             revisitar();
             return tempSet;
       }
 
-      private void connect(Transicion transicion, int i) {
-            if (transicion == null || transicion.esVisitado()) {
+      private void connect(ObjetoEstado ObjetoEstado, int i) {
+            if (ObjetoEstado == null || ObjetoEstado.esVisitado()) {
                   return;
             }
-            transicion.setVisitado();
-            tempSet.add(transicion.getEstado());
-            if (transicion.getTransicion() == -1 || transicion.getTransicion() == i) {
-                  connect(transicion.siguiente, i);
-                  connect(transicion.siguiente2, i);
+            ObjetoEstado.setVisitado();
+            tempSet.add(ObjetoEstado.getEstado());
+            if (ObjetoEstado.getObjetoEstado() == -1 || ObjetoEstado.getObjetoEstado() == i) {
+                  connect(ObjetoEstado.siguiente, i);
+                  connect(ObjetoEstado.siguiente2, i);
             } else {
                   return;
             }
@@ -189,13 +190,13 @@ public class AFD {
             return map.get(set);
       }
 
-      private void revisitar(Transicion transicion) {
-            if (transicion == null || !transicion.esVisitado()) {
+      private void revisitar(ObjetoEstado ObjetoEstado) {
+            if (ObjetoEstado == null || !ObjetoEstado.esVisitado()) {
                   return;
             }
-            transicion.setNoVisitado();
-            revisitar(transicion.siguiente);
-            revisitar(transicion.siguiente2);
+            ObjetoEstado.setNoVisitado();
+            revisitar(ObjetoEstado.siguiente);
+            revisitar(ObjetoEstado.siguiente2);
       }
 
       private void revisitar() {
@@ -204,16 +205,16 @@ public class AFD {
             revisitar(par.nodoInicio.siguiente2);
       }
 
-      private Transicion getTransicion(Transicion transicion, Integer estadoInicio) {
-            if (transicion == null || transicion.esVisitado())
+      private ObjetoEstado getObjetoEstado(ObjetoEstado ObjetoEstado, Integer estadoInicio) {
+            if (ObjetoEstado == null || ObjetoEstado.esVisitado())
                   return null;
-            transicion.setVisitado();
-            if (transicion.getEstado() == estadoInicio)
-                  return transicion;
-            if (transicion.getEstado() > estadoInicio)
+            ObjetoEstado.setVisitado();
+            if (ObjetoEstado.getEstado() == estadoInicio)
+                  return ObjetoEstado;
+            if (ObjetoEstado.getEstado() > estadoInicio)
                   return null;
-            Transicion temp1 = getTransicion(transicion.siguiente, estadoInicio);
-            Transicion temp2 = getTransicion(transicion.siguiente2, estadoInicio);
+            ObjetoEstado temp1 = getObjetoEstado(ObjetoEstado.siguiente, estadoInicio);
+            ObjetoEstado temp2 = getObjetoEstado(ObjetoEstado.siguiente2, estadoInicio);
             if (temp1 != null)
                   return temp1;
             if (temp2 != null)

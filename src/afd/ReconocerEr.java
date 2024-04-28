@@ -1,4 +1,4 @@
-package tarea_1.afd;
+package src.afd;
 
 import java.io.File;
 import java.io.IOException;
@@ -95,7 +95,7 @@ public class ReconocerEr {
             return -1;
       }
 
-      private boolean esIndivisible(Set<Character> set) {
+      private boolean esIndivisible(Set<Character> set) { // Verificar si un set es indivisible
             if (set.size() == 1)
                   return true;
             else {
@@ -114,7 +114,7 @@ public class ReconocerEr {
             return true;
       }
 
-      private boolean enTotalSet(Set<Character> temp) {
+      private boolean enTotalSet(Set<Character> temp) { // Verificar si un set esta en totalSet
             if (temp.isEmpty())
                   return true;
             Set<Integer> indexs = new HashSet<>();
@@ -124,7 +124,7 @@ public class ReconocerEr {
             return indexs.size() == 1;
       }
 
-      private Integer getSetNumero(Character character) {
+      private Integer getSetNumero(Character character) { // Obtener el numero de un set
             int i = 0;
             for (Set<Character> a : totalSet) {
                   for (Character b : a) {
@@ -136,7 +136,7 @@ public class ReconocerEr {
             return -1;
       }
 
-      private void init(Set<Set<Character>> totalSet) {
+      private void init(Set<Set<Character>> totalSet) { // Inicializar los estados terminales y no terminales
             Set<Character> terminal = new HashSet<>();
             Set<Character> noTerminal = new HashSet<>();
             for (Character[] characters : afd) {
@@ -149,7 +149,7 @@ public class ReconocerEr {
             totalSet.add(terminal);
       }
 
-      private boolean esEstadoFinal(Character character) {
+      private boolean esEstadoFinal(Character character) { // Verificar si un estado es final
             for (Character estado : estadoTerminal) {
                   if (estado.equals(character))
                         return true;
@@ -157,7 +157,7 @@ public class ReconocerEr {
             return false;
       }
 
-      public void reconocer(String str) {
+      public void reconocer(String str) { // Reconocer si un string es reconocido por el AFD
             Character estadoAlcanzable = Character.valueOf('A');
             for (int i = 0; i < str.length(); i++) {
                   int index = getIndex(str.charAt(i));
@@ -193,7 +193,7 @@ public class ReconocerEr {
       }
 
       private void guardarEnDir(String recoString) {
-            file = new File(path, recoString + ".txt");
+            file = new File(path, recoString);
             try {
                   if (file.createNewFile()) {
                         System.out.println("String reconocido guardada en: " + file.getAbsolutePath());

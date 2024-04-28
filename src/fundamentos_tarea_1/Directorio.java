@@ -1,4 +1,4 @@
-package tarea_1.fundamentos_tarea_1;
+package src.fundamentos_tarea_1;
 
 import java.io.File;
 
@@ -18,6 +18,8 @@ public class Directorio {
                   } else {
                         System.out.println("No se pudo crear el directorio");
                   }
+            } else {
+                  System.out.println("El directorio ya existe");
             }
       }
 

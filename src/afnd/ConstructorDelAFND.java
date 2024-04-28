@@ -1,11 +1,11 @@
-package tarea_1.afnd;
+package src.afnd;
 
-import tarea_1.nodos_y_estados.Par;
+import src.nodos_y_estados.Par;
 
-public class ConstruirAFND {
+public class ConstructorDelAFND {
 	private GestorAFND GestorAFND = null;
 
-	public ConstruirAFND() {
+	public ConstructorDelAFND() {
 		GestorAFND = new GestorAFND();
 	}
 
@@ -51,7 +51,7 @@ public class ConstruirAFND {
 		parOut.nodoInicio = GestorAFND.nuevoAFND();
 		parOut.nodoFinal = GestorAFND.nuevoAFND();
 		parOut.nodoInicio.siguiente = parOut.nodoFinal;
-		parOut.nodoInicio.setTransicion(c);
+		parOut.nodoInicio.setObjetoEstado(c);
 
 		return parOut;
 	}

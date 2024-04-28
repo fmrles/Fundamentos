@@ -1,12 +1,12 @@
 
-package tarea_1.afnd;
+package src.afnd;
 
 import java.util.HashSet;
 import java.util.Set;
 import java.util.Stack;
 
-import tarea_1.nodos_y_estados.Par;
-import tarea_1.nodos_y_estados.Transicion;
+import src.nodos_y_estados.Par;
+import src.nodos_y_estados.ObjetoEstado;
 
 public class AFND {
 
@@ -25,15 +25,13 @@ public class AFND {
             this.erPostfijo = null;
             Set<Character> temp = new HashSet<>(); // Crea un conjunto temp para almacenar los caracteres únicos en er
                                                    // que son letras.
-            for (int i = 0; i < this.er.length(); i++) { //
+            for (int i = 0; i < this.er.length(); i++) {
                   if (esValido(this.er.charAt(i))) {
                         temp.add(this.er.charAt(i));
                   }
             }
-            alfabeto = new String[temp.size() + 2]; // Crea un array de String alfabeto con una
-            // longitud de temp.size() + 2.
-
-            Object[] tempObj = temp.toArray(); // Convierte el conjunto temp en un array de objetos tempObj.
+            alfabeto = new String[temp.size() + 2];
+            Object[] tempObj = temp.toArray();
             int i = 0;
             alfabeto[i] = "";
             for (; i < tempObj.length; i++) { //
@@ -42,6 +40,9 @@ public class AFND {
             alfabeto[i + 1] = "EPSILON"; // Llena el array alfabeto con los caracteres únicos
             // en er y añade una cadena vacía
             // al principio y “EPSILON” al final.
+            agregarSimboloUnion();
+            postfijo();
+            erToAfnd();
       }
 
       public Par getPar() {
@@ -53,18 +54,16 @@ public class AFND {
       }
 
       public String agregarSimboloUnion() {
-            int longitud = er.length(); // longitud de la expresion regular
-            if (longitud == 1) { // si la longitud es 1, no se puede agregar simbolo union
+            int longitud = er.length();
+            if (longitud == 1) {
                   System.out.println("e.r con simbolo union:" + er);
                   erUnion = er;
                   return er;
-            } // Si la longitud de er es mayor que 1, crea un nuevo array de caracteres
-              // cadena_retorno con una longitud de 2 * length + 2.
+            }
             int longitudCadenaRetorno = 0;
             char cadenaRetorno[] = new char[2 * longitud + 2];
             char primero, segundo = '0';
-            for (int i = 0; i < longitud - 1; i++) { // Recorre la expresion regular y agrega el simbolo union en los
-                                                     // lugares correctos.
+            for (int i = 0; i < longitud - 1; i++) {
                   primero = er.charAt(i);
                   segundo = er.charAt(i + 1);
                   cadenaRetorno[longitudCadenaRetorno++] = primero;
@@ -74,53 +73,43 @@ public class AFND {
                         cadenaRetorno[longitudCadenaRetorno++] = '.';
                   }
             }
-            cadenaRetorno[longitudCadenaRetorno++] = segundo; // Agrega el ultimo caracter de la expresion regular.
-            String erString = new String(cadenaRetorno, 0, longitudCadenaRetorno); // Convierte el array de
-                                                                                   // caracteres cadena_retorno en un
-                                                                                   // string.
+            cadenaRetorno[longitudCadenaRetorno++] = segundo;
+            String erString = new String(cadenaRetorno, 0, longitudCadenaRetorno);
             System.out.println("Expresion regular con simbolo union: " + erString);
             System.out.println();
             erUnion = erString;
             return erString;
       }
 
-      private boolean esValido(char check) { // Verifica si el caracter check es una alfabeto.
+      private boolean esValido(char check) { // Verifica si el caracter check es valido.
             if (check >= 'a' && check <= 'z' || check >= 'A' && check <= 'Z' || check >= '0' && check <= '9') {
                   return true;
             }
             return false;
       }
 
-      public String postfijo() {
-            erUnion = erUnion + "#"; // Agrega el simbolo # al final de la expresion regular.
+      public String postfijo() { // Funcion que convierte la expresion regular a postfijo.
+            erUnion = erUnion + "#";
 
             Stack<Character> s = new Stack<>();
             char ch = '#', ch1, op;
             s.push(ch);
             String erSalida = "";
             int ubicacion = 0;
-            ch = erUnion.charAt(ubicacion++); // Inicializa ch con el primer caracter de la expresion regular.
+            ch = erUnion.charAt(ubicacion++);
             while (!s.empty()) {
-                  if (esValido(ch)) { // Si ch es una alfabeto, agrega ch a la expresion regular postfija.
+                  if (esValido(ch)) {
                         erSalida = erSalida + ch;
                         ch = erUnion.charAt(ubicacion++);
-                  } else { // Si ch no es una alfabeto, compara la relevancia de ch con la relevancia del
-                           // caracter en la cima de la pila.
+                  } else {
                         ch1 = s.peek();
-                        if (rp(ch1) < re(ch)) { // Si la relevancia de ch1 es menor que la relevancia de ch, agrega ch a
-                                                // la pila.
+                        if (rp(ch1) < re(ch)) {
                               s.push(ch);
                               ch = erUnion.charAt(ubicacion++);
-                        } else if (rp(ch1) > re(ch)) { // Si la relevancia de ch1 es mayor que la relevancia de ch, saca
-                                                       // el
-                                                       // caracter en la cima de la pila y agrega el caracter a la
-                                                       // expresion
-                                                       // regular postfija.
+                        } else if (rp(ch1) > re(ch)) {
                               op = s.pop();
                               erSalida = erSalida + op;
-                        } else { // Si la relevancia de ch1 es igual a la relevancia de ch, saca el caracter en
-                                 // la cima
-                                 // de la pila y agrega el caracter a la expresion regular postfija.
+                        } else {
                               op = s.pop();
                               if (op == '(')
                                     ch = erUnion.charAt(ubicacion++);
@@ -173,11 +162,11 @@ public class AFND {
             return -1;
       }
 
-      public void erToAfnd() {
+      public void erToAfnd() { // Funcion que convierte la expresion regular a un AFND.
             par = new Par();
             Par temp = new Par();
             Par der, izq;
-            ConstruirAFND constructor = new ConstruirAFND();
+            ConstructorDelAFND constructor = new ConstructorDelAFND();
             char ch[] = erPostfijo.toCharArray();
             Stack<Par> pila = new Stack<>();
             for (char c : ch) {
@@ -214,9 +203,8 @@ public class AFND {
 
       public void print() {
             restate(this.par.nodoInicio);
-            revisit(this.par.nodoInicio);
+            revisitar(this.par.nodoInicio);
             System.out.println("--------AFND--------");
-            System.out.println();
             System.out.print("Sigma={");
             for (int i = 1; i < alfabeto.length - 1; i++) {
                   System.out.print(alfabeto[i]);
@@ -225,20 +213,20 @@ public class AFND {
                   }
             }
             System.out.print("}");
-
+            System.out.println(" ");
             System.out.println("");
             System.out.println("K y Delta:");
-
+            System.out.println("↓");
             printAFND(this.par.nodoInicio);
 
-            revisit(this.par.nodoInicio);
-
-            System.out.println("s=q" + (this.par.nodoInicio).getEstado());
-            System.out.println("F=q" + (this.par.nodoFinal).getEstado());
+            revisitar(this.par.nodoInicio);
+            System.out.println(" ");
+            System.out.println("Estado Inicial=q" + (this.par.nodoInicio).getEstado());
+            System.out.println("Estado Final=q" + (this.par.nodoFinal).getEstado());
             System.out.println("--------AFND--------");
       }
 
-      private void restate(Transicion startAFND) { //
+      private void restate(ObjetoEstado startAFND) { // Funcion que reestablece los estados del AFND.
             if (startAFND == null || startAFND.esVisitado()) {
                   return;
             }
@@ -248,22 +236,20 @@ public class AFND {
             restate(startAFND.siguiente2);
       }
 
-      private void revisit(Transicion startAFND) {
+      private void revisitar(ObjetoEstado startAFND) { // Funcion que revisita los nodos del AFND.
             if (startAFND == null || !startAFND.esVisitado()) {
                   return;
             }
             startAFND.setNoVisitado();
-            revisit(startAFND.siguiente);
-            revisit(startAFND.siguiente2);
+            revisitar(startAFND.siguiente);
+            revisitar(startAFND.siguiente2);
       }
 
-      private void printAFND(Transicion startAFND) {
-
+      private void printAFND(ObjetoEstado startAFND) {
             if (startAFND == null || startAFND.esVisitado()) {
                   return;
             } else {
                   startAFND.setVisitado();
-
                   printAfndDelta(startAFND);
                   if (startAFND.siguiente != null) {
                         System.out.println("");
@@ -274,10 +260,10 @@ public class AFND {
 
       }
 
-      private void printAfndDelta(Transicion nodo) {
+      private void printAfndDelta(ObjetoEstado nodo) {
             if (nodo.siguiente != null) {
                   System.out.print("q" + nodo.getEstado());
-                  if (nodo.getTransicion() == -1) {
+                  if (nodo.getObjetoEstado() == -1) {
                         for (int i = 0; i < alfabeto.length - 2; i++) {
                               System.out.print("");
                         }
@@ -288,17 +274,17 @@ public class AFND {
                               System.out.print(",_,q" + nodo.siguiente.getEstado());
                         }
                   } else {
-                        int index = getIndex("" + (char) nodo.getTransicion());
+                        int index = getIndex("" + (char) nodo.getObjetoEstado());
                         for (int i = 0; i < alfabeto.length - 1; i++) {
                               if (i != index) {
                                     System.out.print("");
                               } else {
                                     if (nodo.siguiente2 != null) {
-                                          System.out.print("," + "(" + (char) nodo.getTransicion() + ",q"
+                                          System.out.print("," + "(" + (char) nodo.getObjetoEstado() + ",q"
                                                       + nodo.siguiente.getEstado() + ";q"
                                                       + nodo.siguiente2.getEstado() + ")");
                                     } else {
-                                          System.out.print("," + (char) nodo.getTransicion() + ",q"
+                                          System.out.print("," + (char) nodo.getObjetoEstado() + ",q"
                                                       + nodo.siguiente.getEstado());
                                     }
                               }
@@ -312,7 +298,7 @@ public class AFND {
             }
       }
 
-      private int getIndex(String ch) {
+      private int getIndex(String ch) { // Funcion que retorna el indice de un caracter ch en el array alfabeto.
             for (int i = 0; i < alfabeto.length; i++) {
                   if (alfabeto[i].equals(ch))
                         return i - 1;

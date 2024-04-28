@@ -1,33 +1,32 @@
-package tarea_1.afnd;
+package src.afnd;
 
 import java.util.Stack;
 
-import tarea_1.nodos_y_estados.Transicion;
+import src.nodos_y_estados.ObjetoEstado;
 
 public class GestorAFND {
-	private final int MAX_AFND = 256; // Numero max de estados
-	private Transicion[] arrEstadosAFND = null; // Almacena todos los estados del automata
-	private Stack<Transicion> pilaAFND = null; // Es una pila que se utiliza para almacenar los estados del automata
-									// que se han descartado y pueden ser reutilizados.
+	private final int MAX_AFND = 256;
+	private ObjetoEstado[] arrEstadosAFND = null;
+	private Stack<ObjetoEstado> pilaAFND = null;
 	private int proxAsign = 0; // Es un contador que se utiliza para llevar la cuenta del próximo estado del
 						// automata que se debe asignar.
 	private int estadosAFND = 0; // Es un contador que se utiliza para llevar la cuenta del número de estados del
 						// automata que se han asignado.
 
 	public GestorAFND() {
-		arrEstadosAFND = new Transicion[MAX_AFND];
+		arrEstadosAFND = new ObjetoEstado[MAX_AFND];
 		for (int i = 0; i < MAX_AFND; i++) {
-			arrEstadosAFND[i] = new Transicion();
+			arrEstadosAFND[i] = new ObjetoEstado();
 		}
 
-		pilaAFND = new Stack<Transicion>();
+		pilaAFND = new Stack<ObjetoEstado>();
 
 	}
 
-	public Transicion nuevoAFND() { // crea un nuevo estado del automata. Si hay estados en la pila, reutiliza uno
+	public ObjetoEstado nuevoAFND() { // crea un nuevo estado del automata. Si hay estados en la pila, reutiliza uno
 							// de ellos. Si no, crea un nuevo estado. Luego, limpia el estado del
 							// automata, establece su estado y su transicion, y finalmente lo devuelve.
-		Transicion AFND = null;
+		ObjetoEstado AFND = null;
 		if (pilaAFND.size() > 0) {
 			AFND = pilaAFND.pop();
 		} else {
@@ -37,12 +36,12 @@ public class GestorAFND {
 
 		AFND.limpiarEstado();
 		AFND.setEstado(estadosAFND++);
-		AFND.setTransicion(Transicion.EPSILON);
+		AFND.setObjetoEstado(ObjetoEstado.EPSILON);
 
 		return AFND;
 	}
 
-	public void descartarAFND(Transicion afndDescartado) { // descarta un estado del automata. Disminuye el contador
+	public void descartarAFND(ObjetoEstado afndDescartado) { // descarta un estado del automata. Disminuye el contador
 											// estadosAFND, limpia el estado del automata y lo
 											// empuja a la pila.
 		--estadosAFND;

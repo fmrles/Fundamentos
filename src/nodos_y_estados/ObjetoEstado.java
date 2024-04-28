@@ -1,22 +1,22 @@
-package tarea_1.nodos_y_estados;
+package src.nodos_y_estados;
 
-public class Transicion {
+public class ObjetoEstado {
 
       public static final int EPSILON = -1;
       public static final int VACIO = -2;
 
-      private int transicion;
+      private int ObjetoEstado;
 
-      public int getTransicion() {
-            return transicion;
+      public int getObjetoEstado() {
+            return ObjetoEstado;
       }
 
-      public void setTransicion(int tipo) {
-            transicion = tipo;
+      public void setObjetoEstado(int tipo) {
+            ObjetoEstado = tipo;
       }
 
-      public Transicion siguiente;
-      public Transicion siguiente2;
+      public ObjetoEstado siguiente;
+      public ObjetoEstado siguiente2;
       private int estado;
       private boolean visitado = false;
 
@@ -43,11 +43,6 @@ public class Transicion {
       public void limpiarEstado() {
             siguiente = siguiente2 = null;
             estado = -1;
-      }
-
-      @Override
-      public String toString() {
-            return (char) transicion + " " + estado + " " + esVisitado();
       }
 
 }
